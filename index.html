@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<title>Любовный Опрос ❤️</title>
+
+<style>
+body {
+    font-family: Arial, sans-serif;
+    background: linear-gradient(135deg, #ffd6f5, #ffc9f2, #ffb8e8);
+    text-align: center;
+    min-height: 100vh;
+    padding-top: 30px;
+    color: #4a1c35;
+    overflow-x: hidden;
+    transition: opacity 0.4s ease;
+}
+
+.screen { display: none; }
+.active { display: block; }
+
+input, textarea {
+    width: 80%;
+    max-width: 400px;
+    padding: 14px;
+    margin: 12px;
+    border-radius: 18px;
+    border: 1px solid #ff8ac2;
+    background: rgba(255,255,255,0.9);
+    font-size: 20px;
+}
+
+button {
+    font-size: 22px;
+    padding: 16px 30px;
+    margin: 12px;
+    border-radius: 25px;
+    border: none;
+    background: linear-gradient(135deg, #ff5fa8, #ff2d7a);
+    color: white;
+    cursor: pointer;
+    width: 80%;
+    max-width: 380px;
+    box-shadow: 0 4px 12px rgba(255,0,120,0.4);
+}
+
+.error {
+    color: #ff0033;
+    font-size: 18px;
+    font-weight: bold;
+}
+</style>
+</head>
+
+<body>
+
+<!-- ЭКРАН 1 — ввод её имени -->
+<div id="screen1" class="active screen">
+    <h1>Введите ваше имя ❤️</h1>
+    <input id="userName" placeholder="Ваше имя">
+    <button onclick="goReady()">Подтвердить</button>
+    <p id="nameError" class="error"></p>
+</div>
+
+<!-- ЭКРАН 2 — готовы ли -->
+<div id="screen2" class="screen">
+    <h1>Вы готовы к опросу? ❤️</h1>
+    <button onclick="goYes()">Да</button>
+    <button onclick="goNo()">Нет</button>
+</div>
+
+<!-- ЭКРАН 3 — повторное нет -->
+<div id="screen3" class="screen">
+    <h1>Вы уверены, что не хотите проходить опрос? 😢</h1>
+    <button onclick="goNoFinal()">Нет</button>
+    <button onclick="goYes()">Ладно, да</button>
+</div>
+
+<!-- ЭКРАН 4 — ввод имени парня -->
+<div id="screen4" class="screen">
+    <h1>Введите имя Парня ❤️</h1>
+    <input id="myName" placeholder="Имя Парня">
+    <button onclick="goBirth()">Продолжить</button>
+    <p id="myNameError" class="error"></p>
+</div>
+
+<!-- ЭКРАН 5 — ввод даты вручную -->
+<div id="screenDate" class="screen">
+    <h1>Введите дату ❤️</h1>
+    <p style="font-size:20px; margin-top:-5px; color:#b3005e;">
+        Форма: 01.01.2027 
+    </p>
+    <input id="dateManual" placeholder="01.01.2027">
+    <button onclick="checkManualDate()">Продолжить</button>
+    <p id="dateManualError" class="error"></p>
+</div>
+
+<!-- 15 вопросов -->
+<div id="questions"></div>
+
+<!-- ЭКРАН 21 — финал -->
+<div id="screen21" class="screen">
+    <h1>Спасибо за прохождение опроса ❤️</h1>
+    <p>Я люблютебя❤️!</p>
+</div>
+
+<script>
+function show(id) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+}
+
+/* ЭКРАН 1 */
+function goReady() {
+    let name = document.getElementById('userName').value.trim();
+    if (name.length < 1) {
+        document.getElementById('nameError').innerText = "Введите имя!";
+        return;
+    }
+    document.getElementById('nameError').innerText = "";
+    show('screen2');
+}
+
+/* ЭКРАН 2 */
+function goYes() {
+    show('screen4');
+}
+
+function goNo() {
+    show('screen3');
+}
+
+/* ЭКРАН 3 */
+function goNoFinal() {
+    show('screen1'); 
+}
+
+/* ЭКРАН 4 */
+function goBirth() {
+    let val = document.getElementById('myName').value.trim();
+    if (val.toLowerCase() !== "кирилл") {
+        document.getElementById('myNameError').innerText = "Имя введено неправильно!";
+        return;
+    }
+    document.getElementById('myNameError').innerText = "";
+    show('screenDate');
+}
+
+/* ЭКРАН 5 — проверка даты */
+function checkManualDate() {
+    let val = document.getElementById('dateManual').value.trim();
+    let pattern = /^\d{2}\.\d{2}\.\d{4}$/;
+
+    if (!pattern.test(val)) {
+        document.getElementById('dateManualError').innerText =
+            "Введите дату в формате 01.01.2027 ❤️";
+        return;
+    }
+
+    if (val !== "08.07.2011") {
+        document.getElementById('dateManualError').innerText =
+            "Дата должна быть именно 08.07.2011 ❤️";
+        return;
+    }
+
+    document.getElementById('dateManualError').innerText = "";
+    generateQuestions();
+}
+
+/* Генерация 15 вопросов */
+function generateQuestions() {
+    const q = [
+        "За что ты меня любишь?",
+        "Что ты чувствуешь ко мне?",
+        "Что тебе нравится во мне?",
+        "Что ты ценишь в наших отношениях?",
+        "Какие моменты с нами самые дорогие?",
+        "Что ты хочешь со мной в будущем?",
+        "Когда ты поняла, что я тебе нравлюсь?",
+        "Что делает меня особенным?",
+        "Что ты чувствуешь, когда мы рядом?",
+        "Что ты хочешь мне сказать?",
+        "Что ты думаешь о нашем будущем?",
+        "Что тебе нравится в моём характере?",
+        "Что ты чувствуешь, когда я пишу тебе?",
+        "Что ты хочешь изменить в наших отношениях?",
+        "Почему ты выбрала именно меня?"
+    ];
+
+    let html = "";
+    for (let i = 0; i < 15; i++) {
+        html += `
+        <div id="q${i}" class="screen">
+            <h1>${q[i]} ❤️</h1>
+            <textarea id="ans${i}"></textarea>
+            <button onclick="nextQ(${i})">Дальше</button>
+            ${i > 0 ? `<button onclick="prevQ(${i})">Назад</button>` : ""}
+        </div>`;
+    }
+
+    document.getElementById('questions').innerHTML = html;
+    show('q0');
+}
+
+function nextQ(i) {
+    if (i === 14) {
+        show('screen21');
+        return;
+    }
+    show('q' + (i + 1));
+}
+
+function prevQ(i) {
+    show('q' + (i - 1));
+}
+</script>
+
+<!-- ПАДАЮЩИЕ СЕРДЕЧКИ -->
+<div id="falling"></div>
+
+<style>
+#falling {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    overflow: hidden;
+    z-index: 9999;
+}
+.fall-item {
+    position: absolute;
+    top: -50px;
+    font-size: 28px;
+    animation: fall 6s linear infinite;
+    opacity: 0.9;
+}
+@keyframes fall {
+    0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+    100% { transform: translateY(110vh) rotate(360deg); opacity: 0; }
+}
+</style>
+
+<script>
+function spawnHeart() {
+    const icons = ["💗","💞","💓","💘","🌸","🌺","🌼","💐","🌷"];
+    const item = document.createElement("div");
+    item.classList.add("fall-item");
+    item.innerText = icons[Math.floor(Math.random() * icons.length)];
+    item.style.left = Math.random() * 100 + "vw";
+    item.style.animationDuration = (4 + Math.random() * 4) + "s";
+    document.getElementById("falling").appendChild(item);
+    setTimeout(() => item.remove(), 6000);
+}
+setInterval(spawnHeart, 350);
+</script>
+
+</body>
+</html>
