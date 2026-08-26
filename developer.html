@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<title>Панель разработчика 🔒</title>
+
+<style>
+body {
+    font-family: Arial;
+    background: #1a1a1a;
+    color: white;
+    text-align: center;
+    padding: 40px;
+}
+
+input {
+    padding: 12px;
+    font-size: 18px;
+    border-radius: 10px;
+    border: none;
+    width: 80%;
+    max-width: 350px;
+}
+
+button {
+    padding: 12px 25px;
+    font-size: 18px;
+    border-radius: 10px;
+    border: none;
+    background: #ff4081;
+    color: white;
+    margin-top: 10px;
+    cursor: pointer;
+}
+
+#data {
+    display: none;
+    margin-top: 30px;
+    font-size: 20px;
+    text-align: left;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+}
+</style>
+</head>
+
+<body>
+
+<h2>Панель разработчика 🔒</h2>
+
+<p>Введите пароль:</p>
+<input id="pass" type="password" placeholder="Пароль...">
+<br>
+<button onclick="checkPass()">Войти</button>
+
+<div id="data"></div>
+
+<script>
+function checkPass() {
+    let p = document.getElementById("pass").value;
+
+    if (p !== "1234") { 
+        alert("Неверный пароль");
+        return;
+    }
+
+    let name = localStorage.getItem("love_userName");
+    let myName = localStorage.getItem("love_myName");
+    let myDate = localStorage.getItem("love_myDate");
+    let answers = JSON.parse(localStorage.getItem("love_answers"));
+
+    let html = "";
+
+    html += "<h3>Имя девушки: " + name + "</h3>";
+    html += "<h3>Имя парня: " + myName + "</h3>";
+    html += "<h3>Дата: " + myDate + "</h3>";
+
+    html += "<h3>Ответы:</h3>";
+
+    answers.forEach((a, i) => {
+        html += "<p><b>Вопрос " + (i+1) + ":</b> " + a + "</p>";
+    });
+
+    html += `<br><button onclick="downloadResult()">Скачать результат</button>`;
+
+    document.getElementById("data").innerHTML = html;
+    document.getElementById("data").style.display = "block";
+}
+
+function downloadResult() {
+    let name = localStorage.getItem("love_userName");
+    let myName = localStorage.getItem("love_myName");
+    let myDate = localStorage.getItem("love_myDate");
+    let answers = JSON.parse(localStorage.getItem("love_answers"));
+
+    let text = "";
+    text += "Имя девушки: " + name + "\n";
+    text += "Имя парня: " + myName + "\n";
+    text += "Дата: " + myDate + "\n\n";
+
+    for (let i = 0; i < answers.length; i++) {
+        text += "Вопрос " + (i+1) + ":\n";
+        text += answers[i] + "\n\n";
+    }
+
+    let blob = new Blob([text], { type: "text/plain" });
+    let link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    link.download = "result.txt";
+    link.click();
+}
+</script>
+
+</body>
+</html>
